@@ -9,20 +9,26 @@ const bot = mineflayer.createBot({
 bot.on('spawn', () => {
   console.log('✅ Бот подключился и живёт своей жизнью');
 
-  // Прыжки чаще
+  // Выполнение команды /l dfm44-55 с задержкой 1 секунда
+  setTimeout(() => {
+    bot.chat('/l dfm44-55');
+    console.log('🔑 Бот отправил команду /l dfm44-55');
+  }, 1000);
+
+  // Прыжки
   setInterval(() => {
     bot.setControlState('jump', true);
     setTimeout(() => bot.setControlState('jump', false), 600);
   }, Math.floor(Math.random() * 10000) + 5000); // 5–15 секунд
 
-  // Частые, но плавные повороты камеры
+  // Повороты камеры
   setInterval(() => {
-    const yaw = bot.entity.yaw + (Math.random() - 0.5) * 0.3; // Меньший разброс
+    const yaw = bot.entity.yaw + (Math.random() - 0.5) * 0.3;
     const pitch = Math.max(-1.5, Math.min(1.5, bot.entity.pitch + (Math.random() - 0.5) * 0.2));
     bot.look(yaw, pitch, true);
   }, Math.floor(Math.random() * 13000) + 7000); // 7–20 секунд
 
-  // Частое случайное движение
+  // Случайное движение
   setInterval(() => {
     const move = ['forward', 'back', 'left', 'right'][Math.floor(Math.random() * 4)];
     bot.setControlState(move, true);
