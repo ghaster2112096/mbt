@@ -1,9 +1,9 @@
 const mineflayer = require('mineflayer');
 
 const bot = mineflayer.createBot({
-  host: process.env.MC_HOST || 'localhost',
-  port: parseInt(process.env.MC_PORT) || 25565,
-  username: process.env.MC_USERNAME || 'AFK_Bot'
+  host: '6i9b.sdlf.fun',   
+  port: 25565,                  
+  username: 'UPTBeacon'
 });
 
 bot.on('spawn', () => {
