@@ -16,7 +16,7 @@ const bot = mineflayer.createBot({
   host: '6i9b.sdlf.fun',
   port: 25565,
   username: 'UPTBeacon',
-  version: '1.21.4' // Укажи версию сервера (1.20–1.21.7)
+  version: '1.20.1' // Укажи версию сервера (1.20–1.21.7)
 });
 
 function startBotActions() {
