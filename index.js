@@ -1,4 +1,16 @@
 const mineflayer = require('mineflayer');
+const express = require('express');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Пинг-endpoint для Render
+app.get('/ping', (req, res) => {
+  res.send('UPTBeacon is alive! 😎');
+});
+app.listen(PORT, () => {
+  console.log(`🌐 Сервер пинга работает на порту ${PORT}`);
+});
 
 const bot = mineflayer.createBot({
   host: '6i9b.sdlf.fun',
@@ -55,7 +67,7 @@ function startBotActions() {
     bot.clearControlStates();
     console.log('⏸️ Бот остановился');
   }, Math.floor(Math.random() * 15000) + 15000); // 15–30 секунд
-}
+});
 
 // Старт действий при спавне
 bot.on('spawn', startBotActions);
