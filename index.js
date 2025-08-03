@@ -4,45 +4,33 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Пинг-endpoint для Render
+// Пинг-сервер для Render
 app.get('/ping', (req, res) => {
   res.send('UPTBeacon is alive! 😎');
 });
 app.listen(PORT, () => {
-  console.log(`🌐 Сервер пинга работает на порту ${PORT}`);
+  console.log(`🌐 Пинг-сервер запущен на порту ${PORT}`);
 });
 
-// Основные переменные
-let bot = null;
+// Создание бота
+let bot = mineflayer.createBot({
+  host: '6i9b.sdlf.fun',
+  port: 25565,
+  username: 'UPTBeacon',
+  version: '1.21.4'
+});
 
-// Создание и запуск бота
-function createBot() {
-  const newBot = mineflayer.createBot({
-    host: '6i9b.sdlf.fun',
-    port: 25565,
-    username: 'UPTBeacon',
-    version: '1.20.1'
-  });
-
-  newBot.on('spawn', () => startBotActions(newBot));
-  newBot.on('end', reconnectBot);
-  newBot.on('message', (message) => handleBotMessage(newBot, message));
-
-  return newBot;
-}
-
-// Запуск действий бота
-function startBotActions(bot) {
+// Запуск действий
+function startBotActions() {
   console.log('✅ Бот подключился и живёт своей жизнью');
   console.log('📍 Позиция: ' + JSON.stringify(bot.entity.position));
 
-  // Отправка команды авторизации
   setTimeout(() => {
     bot.chat('/l dfm44-55');
     console.log('🔑 Бот отправил команду /l dfm44-55');
   }, 2000);
 
-  // Цикл активности
+  // Активность
   setInterval(() => {
     const action = Math.random();
     if (action < 0.3) {
@@ -79,27 +67,37 @@ function startBotActions(bot) {
   }, Math.floor(Math.random() * 15000) + 15000);
 }
 
-// Обработка сообщений от сервера
-function handleBotMessage(bot, message) {
+// При спавне — начинаем действия
+bot.on('spawn', startBotActions);
+
+// Повторная авторизация, если бот выкинуло
+bot.on('message', (message) => {
   const text = message.toString();
   if (text.includes('Incorrect password') || text.includes('Login timeout')) {
     console.log('❌ Ошибка входа, повторяем /l dfm44-55');
     setTimeout(() => bot.chat('/l dfm44-55'), 2000);
   }
-}
+});
 
-// Реконнект
-function reconnectBot() {
+// Авто-реконнект
+bot.on('end', () => {
   console.log('🔌 Бот отключился, пытаемся переподключиться...');
   setTimeout(() => {
-    try {
-      bot.quit();
-    } catch (e) {
-      console.warn('⚠️ Не удалось корректно завершить старого бота');
-    }
-    bot = createBot();
+    bot.quit();
+    bot = mineflayer.createBot({
+      host: '6i9b.sdlf.fun',
+      port: 25565,
+      username: 'UPTBeacon',
+      version: '1.20.1'
+    });
+    bot.on('spawn', startBotActions);
+    bot.on('end', bot.on('end'));
+    bot.on('message', (message) => {
+      const text = message.toString();
+      if (text.includes('Incorrect password') || text.includes('Login timeout')) {
+        console.log('❌ Ошибка входа, повторяем /l dfm44-55');
+        setTimeout(() => bot.chat('/l dfm44-55'), 2000);
+      }
+    });
   }, 5000);
-}
-
-// Первый запуск
-bot = createBot();
+});
