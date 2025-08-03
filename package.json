@@ -1,11 +1,12 @@
 {
-  "name": "afk-minecraft-bot",
+  "name": "upt-beacon-bot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "mineflayer": "^4.5.0"
+    "express": "^4.18.2",
+    "mineflayer": "^5.4.1"
   }
 }
