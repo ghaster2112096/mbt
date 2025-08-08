@@ -33,32 +33,16 @@ function startBotActions() {
   // Активность
   setInterval(() => {
     const action = Math.random();
-    if (action < 0.3) {
-      bot.setControlState('jump', true);
-      setTimeout(() => {
-        bot.setControlState('jump', false);
-        console.log('⬆️ Бот прыгнул');
-      }, 600);
-    } else if (action < 0.7) {
-      const move = ['forward', 'back', 'left', 'right'][Math.floor(Math.random() * 4)];
-      bot.setControlState(move, true);
-      setTimeout(() => {
-        bot.setControlState(move, false);
-        console.log('🚶 Бот двинулся: ' + move);
-      }, 500 + Math.random() * 500);
-    } else {
+    if (action < 0.5) {
       bot.swingArm();
       console.log('👊 Бот махнул рукой');
+    } else {
+      const yaw = bot.entity.yaw + (Math.random() - 0.5) * 0.3;
+      const pitch = Math.max(-0.8, Math.min(0.8, bot.entity.pitch + (Math.random() - 0.5) * 0.2));
+      bot.look(yaw, pitch, true);
+      console.log('👀 Бот повернул голову: yaw=' + yaw.toFixed(2) + ', pitch=' + pitch.toFixed(2));
     }
   }, Math.floor(Math.random() * 5000) + 5000);
-
-  // Камера
-  setInterval(() => {
-    const yaw = bot.entity.yaw + (Math.random() - 0.5) * 0.3;
-    const pitch = Math.max(-0.8, Math.min(0.8, bot.entity.pitch + (Math.random() - 0.5) * 0.2));
-    bot.look(yaw, pitch, true);
-    console.log('👀 Бот повернул голову: yaw=' + yaw.toFixed(2) + ', pitch=' + pitch.toFixed(2));
-  }, Math.floor(Math.random() * 6000) + 6000);
 
   // Паузы
   setInterval(() => {
@@ -88,7 +72,7 @@ bot.on('end', () => {
       host: '6i9b.sdlf.fun',
       port: 25565,
       username: 'UPTBeacon',
-      version: '1.20.1'
+      version: '1.21.4'
     });
     bot.on('spawn', startBotActions);
     bot.on('end', bot.on('end'));
